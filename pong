@@ -1,5 +1,9 @@
 #!/usr/bin/python
+import os
 import sys
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
+
 import time
 import logging
 import numpy as np
