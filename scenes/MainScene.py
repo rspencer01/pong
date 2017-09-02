@@ -1,8 +1,8 @@
-import Scene
-import RectangleObjects
-from RenderStage import RenderStage
+import dent.Scene as Scene
+import dent.RectangleObjects as RectangleObjects
+from dent.RenderStage import RenderStage
 import numpy as np
-import messaging
+import dent.messaging as messaging
 import logging
 
 class MainScene(Scene.Scene):
@@ -12,8 +12,8 @@ class MainScene(Scene.Scene):
         RenderStage(render_func = self.display, final_stage=True)
         )
 
-    import Texture
-    Texture.getWhiteTexture().load()
+    import dent.Texture
+    dent.Texture.getWhiteTexture().load()
 
     self.ball = RectangleObjects.BlankImageObject()
     self.ball.width = 0.01
