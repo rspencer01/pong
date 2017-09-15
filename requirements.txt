@@ -1,6 +1,2 @@
 numpy==1.11.3
-Image==1.5.15
-PyOpenGL==3.1.1a1
-pyassimp==3.3
-scipy==0.19.1
-PyYAML==3.12
+dent==0.0.1
