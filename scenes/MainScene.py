@@ -1,16 +1,14 @@
-import dent.Scene as Scene
-import dent.RectangleObjects as RectangleObjects
-from dent.RenderStage import RenderStage
-import numpy as np
-import dent.messaging as messaging
 import logging
+import numpy as np
+
+import dent.RectangleObjects as RectangleObjects
+import dent.Scene as Scene
+import dent.keyboard
+import dent.messaging as messaging
 
 class MainScene(Scene.Scene):
   def __init__(self):
     super(MainScene, self).__init__()
-    self.renderPipeline.stages.append(
-        RenderStage(render_func = self.display, final_stage=True)
-        )
 
     # We only use one texture in this scene: blank white.  Thus we can load the
     # texture once at scene inception.
@@ -34,15 +32,13 @@ class MainScene(Scene.Scene):
     self.rightpaddle.height = 0.1
     self.rightpaddle.position[0] = 0.98
 
-    # A set of all keys that are currently pressed
-    self.keys = set()
+    # The objects to render
+    self._objects = [self.ball, self.leftpaddle, self.rightpaddle]
 
     # Start the game off
     self.reset()
 
     messaging.add_handler('timer', self.timer)
-    messaging.add_handler('keyboard', self.key_down)
-    messaging.add_handler('keyboard_up', self.key_up)
 
 
   def reset(self):
@@ -55,18 +51,6 @@ class MainScene(Scene.Scene):
     self.ball.velocity[1] /= 2
     self.ball.velocity /= np.linalg.norm(self.ball.velocity) * 3
 
-  def display(self, **kwargs):
-    """Display all the objects in this scene."""
-    self.ball.display()
-    self.leftpaddle.display()
-    self.rightpaddle.display()
-
-  def key_down(self, key):
-    self.keys.add(key)
-
-  def key_up(self, key):
-    if key in self.keys:
-      self.keys.remove(key)
 
   def timer(self, fps):
     # Move the ball
@@ -101,11 +85,11 @@ class MainScene(Scene.Scene):
     #
     # Paddles are clamped to the middle 70% of the screen to allow a little
     # "dead space" at the top and bottom for strategic play.
-    if 'q' in self.keys:
+    if dent.keyboard.is_key_down('q'):
       self.leftpaddle.position[1] = min(0.85, self.leftpaddle.position[1]+0.4/fps)
-    if 'a' in self.keys:
+    if dent.keyboard.is_key_down('a'):
       self.leftpaddle.position[1] = max(0.15, self.leftpaddle.position[1]-0.4/fps)
-    if 'p' in self.keys:
+    if dent.keyboard.is_key_down('p'):
       self.rightpaddle.position[1] = min(0.85, self.rightpaddle.position[1]+0.4/fps)
-    if 'l' in self.keys:
+    if dent.keyboard.is_key_down('l'):
       self.rightpaddle.position[1] = max(0.15, self.rightpaddle.position[1]-0.4/fps)
